@@ -1,11 +1,11 @@
 (() => {
   const $ = (id) => document.getElementById(id);
   const menu = $("sideMenu"), toggle = $("menuToggle"), scrim = $("scrim");
-  const intro = $("intro"), wrap = $("gameWrap"), canvas = $("game");
+  const intro = $("intro"), wrap = $("gameWrap"), donatePage = $("donatePage"), canvas = $("game");
   const ctx = canvas.getContext("2d");
   const scoreEl = $("score"), statusEl = $("gameStatus"), messageEl = $("gameMessage");
   const restart = $("restartButton");
-  const donate = $("donateDialog");
+
   let running = false, over = false, raf = 0, last = 0, score = 0, speed = 5;
   let dino, obstacles, clouds, groundOffset;
 
@@ -18,8 +18,18 @@
   toggle.addEventListener("click", () => openMenu(!menu.classList.contains("open")));
   scrim.addEventListener("click", () => openMenu(false));
   $("menuPlay").addEventListener("click", () => { openMenu(false); startGame(); });
-  $("menuDonate").addEventListener("click", () => { openMenu(false); donate.showModal(); });
-  $("closeDonate").addEventListener("click", () => donate.close());
+  $("menuDonate").addEventListener("click", () => {
+    openMenu(false);
+    cancelAnimationFrame(raf);
+    running = false;
+    intro.hidden = true;
+    wrap.hidden = true;
+    donatePage.hidden = false;
+  });
+  $("backFromDonate").addEventListener("click", () => {
+    donatePage.hidden = true;
+    intro.hidden = false;
+  });
   $("playButton").addEventListener("click", startGame);
   restart.addEventListener("click", startGame);
 
