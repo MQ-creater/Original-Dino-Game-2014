@@ -30,7 +30,7 @@
 
   function reset() {
     score = 0; speed = 4.2; groundOffset = 0; spawnTimer = 3.8; over = false;
-    dino = { x: 82, y: 210, w: 90, h: 60, vy: 0, grounded: true, step: 0 };
+    dino = { x: 82, y: 213, w: 87, h: 57, vy: 0, grounded: true, step: 0 };
     obstacles = [];
     clouds = [{x:360,y:62},{x:690,y:92},{x:820,y:48}];
     scoreEl.textContent = "00000"; statusEl.textContent = "RUNNING";
@@ -54,28 +54,28 @@
     if (e.target === canvas) e.preventDefault();
   }, {passive:false});
 
-  // Original monochrome pixel dinosaur sprite (30 x 20 cells), fixed pose.
+  // Original block-pixel T-rex silhouette, facing right.
+  // Tail, raised head, short arms and two feet remain distinct at game scale.
   const dinoPixels = [
-    "..............................",
-    "....................#######...",
-    "....................#######...",
-    "....................#########.",
-    "....................#########.",
-    "...................##########.",
-    "...................#########..",
-    ".......#####################..",
-    ".......################.......",
-    "....###################........",
-    "#######################........",
-    "#######################........",
-    "....###################........",
-    ".......################.......",
-    ".......################.......",
-    ".......################.......",
-    "..........###......###........",
-    "..........###......###........",
-    ".........#####....#####.......",
-    ".........#####....#####......."
+    "....................#######",
+    "...................#########",
+    "...................##########",
+    "...................###########",
+    "....................##########",
+    ".................############.",
+    "...............#############...",
+    "............###############.....",
+    ".......###################.......",
+    "....#####################.........",
+    ".########################..........",
+    "#######################............",
+    "....###################............",
+    ".......################............",
+    "..........##############...........",
+    "..........#####....#####............",
+    "..........#####....#####............",
+    ".........######....######...........",
+    ".........######....######..........."
   ];
   function drawDino() {
     const cell=3, ox=Math.round(dino.x), oy=Math.round(dino.y);
@@ -83,7 +83,9 @@
     dinoPixels.forEach((row,ry)=>{
       for(let cx=0;cx<row.length;cx++) if(row[cx]==="#") ctx.fillRect(ox+cx*cell,oy+ry*cell,cell,cell);
     });
-    ctx.fillStyle="#fff"; ctx.fillRect(ox+25*cell,oy+2*cell,cell,cell);
+    ctx.fillStyle="#fff";
+    ctx.fillRect(ox+25*cell,oy+2*cell,cell,cell);
+    ctx.fillRect(ox+28*cell,oy+4*cell,cell,cell);
   }
 
   // Pixel-grid saguaro cactus with a thick trunk and two raised arms.
@@ -168,7 +170,7 @@
     obstacles=obstacles.filter(o=>o.x>-75);
     clouds.forEach(c=>{c.x-=speed*.22*dt;if(c.x<-60)c.x=930;});
 
-    const playerBox={x:dino.x+5,y:dino.y+7,w:75,h:45};
+    const playerBox={x:dino.x+4,y:dino.y+5,w:80,h:49};
     for(const o of obstacles) {
       const box = o.type==="bird"
         ? {x:o.x+5,y:o.y+4,w:43,h:24}
