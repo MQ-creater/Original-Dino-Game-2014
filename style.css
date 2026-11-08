@@ -39,12 +39,9 @@ footer { display: flex; justify-content: space-between; gap: 16px; color: #999; 
 canvas { display: block; width: 100%; height: auto; background: white; border-bottom: 2px solid #111; touch-action: manipulation; }
 .game-controls { display: flex; justify-content: space-between; align-items: center; min-height: 58px; color: #777; font-size: 12px; }
 .small-button { background: white; color: #111; border: 1px solid #111; padding: 11px 16px; font-size: 10px; font-weight: 800; letter-spacing: .12em; cursor: pointer; }
-.dialog { width: min(440px, calc(100% - 36px)); border: 1px solid #111; padding: 42px; color: #111; }
-.dialog::backdrop { background: rgba(0,0,0,.35); }
-.dialog-close { position: absolute; right: 14px; top: 10px; border: 0; background: transparent; font-size: 28px; cursor: pointer; }
-.dialog h2 { font-size: 42px; letter-spacing: -.06em; margin: 14px 0; }
-.dialog p { color: #555; line-height: 1.6; font-size: 14px; }
-.dialog .dialog-small { font-size: 11px; color: #999; }
+.donate-page { text-align: center; margin: auto 0; max-width: 620px; align-self: center; }
+.donate-page p { color: #666; font-size: 15px; line-height: 1.7; }
+.donate-page .donate-status { color: #999; font-size: 11px; margin: 26px 0; }
 [hidden] { display: none !important; }
 @media (max-width: 600px) {
   .topbar { height: 64px; }
