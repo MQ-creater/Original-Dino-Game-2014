@@ -1,6 +1,6 @@
 # Source provenance and licensing checklist
 
-## Historical game source under review
+## Historical game source reference only
 
 The Chromium project documents that its network-error resources include the scripts and images for the offline dinosaur game:
 
@@ -10,7 +10,7 @@ The Chromium project documents that its network-error resources include the scri
 
 The historical runner file identifies its copyright as The Chromium Authors, 2014, and says it is governed by a BSD-style license. The Chromium repository's top-level license is BSD 3-Clause. This is a useful starting point, **not** proof that every game asset, dependency, or file in every historical revision has identical licensing.
 
-## Before integrating or distributing
+## If considering Chromium source in the future
 
 1. Choose and record the exact Chromium revision to be used.
 2. Inventory every required JavaScript/TypeScript file, image, sound, font, and other asset.
