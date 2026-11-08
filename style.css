@@ -1,0 +1,55 @@
+:root {
+  color-scheme: light;
+  --ink: #111;
+  --paper: #fff;
+  --soft: #f3f3f3;
+  --mid: #777;
+  --line: #dedede;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; min-height: 100%; background: var(--paper); color: var(--ink); }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+button { font: inherit; }
+.topbar { height: 76px; padding: 0 clamp(20px, 6vw, 84px); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); position: relative; z-index: 5; background: white; }
+.wordmark { color: var(--ink); font-size: 15px; font-weight: 900; letter-spacing: .12em; text-decoration: none; }
+.wordmark span { color: #777; margin-left: 7px; font-weight: 500; }
+.menu-toggle { width: 46px; height: 46px; border: 1px solid var(--line); background: white; display: grid; align-content: center; justify-items: center; gap: 5px; cursor: pointer; }
+.menu-toggle span { width: 19px; height: 2px; background: #111; display: block; transition: transform .2s; }
+.menu-panel { position: fixed; z-index: 8; right: 0; top: 0; width: min(330px, 86vw); height: 100dvh; background: #fff; border-left: 1px solid var(--line); padding: 110px 34px 34px; transform: translateX(105%); transition: transform .25s ease; }
+.menu-panel.open { transform: translateX(0); }
+.menu-heading, .eyebrow { font-size: 10px; letter-spacing: .2em; font-weight: 800; color: var(--mid); }
+.menu-link { display: block; width: 100%; padding: 20px 0; text-align: left; border: 0; border-bottom: 1px solid var(--line); background: white; font-size: 28px; font-weight: 750; cursor: pointer; }
+.menu-link:hover { padding-left: 8px; }
+.menu-note { margin-top: 28px; color: var(--mid); font-size: 12px; }
+.scrim { position: fixed; inset: 0; z-index: 7; border: 0; background: rgba(0,0,0,.28); display: none; }
+.scrim.show { display: block; }
+.page { min-height: calc(100dvh - 76px); max-width: 1100px; margin: auto; padding: clamp(48px, 9vh, 100px) clamp(20px, 6vw, 70px) 26px; display: flex; flex-direction: column; }
+.intro { text-align: center; margin: auto 0; }
+h1 { font-size: clamp(48px, 8vw, 88px); line-height: .98; letter-spacing: -.075em; margin: 22px 0; font-weight: 850; }
+h1 span { color: #888; }
+.intro p { color: #666; font-size: clamp(14px, 2vw, 17px); margin: 0 auto 30px; }
+.primary-button { border: 1px solid #111; background: #111; color: #fff; padding: 17px 34px; min-width: 174px; font-size: 12px; font-weight: 800; letter-spacing: .18em; cursor: pointer; }
+.primary-button span { font-size: 18px; margin-left: 16px; }
+.primary-button:hover { background: #444; }
+.hint { margin-top: 17px; font-size: 11px; color: #888; }
+footer { display: flex; justify-content: space-between; gap: 16px; color: #999; font-size: 9px; font-weight: 750; letter-spacing: .15em; border-top: 1px solid var(--line); padding-top: 20px; }
+.game-wrap { width: 100%; margin: auto 0; }
+.game-meta { display: flex; justify-content: space-between; color: #777; font-size: 10px; letter-spacing: .16em; font-weight: 800; margin-bottom: 12px; }
+.game-meta b { color: #111; margin-left: 8px; font-variant-numeric: tabular-nums; }
+canvas { display: block; width: 100%; height: auto; background: white; border-bottom: 2px solid #111; touch-action: manipulation; }
+.game-controls { display: flex; justify-content: space-between; align-items: center; min-height: 58px; color: #777; font-size: 12px; }
+.small-button { background: white; color: #111; border: 1px solid #111; padding: 11px 16px; font-size: 10px; font-weight: 800; letter-spacing: .12em; cursor: pointer; }
+.dialog { width: min(440px, calc(100% - 36px)); border: 1px solid #111; padding: 42px; color: #111; }
+.dialog::backdrop { background: rgba(0,0,0,.35); }
+.dialog-close { position: absolute; right: 14px; top: 10px; border: 0; background: transparent; font-size: 28px; cursor: pointer; }
+.dialog h2 { font-size: 42px; letter-spacing: -.06em; margin: 14px 0; }
+.dialog p { color: #555; line-height: 1.6; font-size: 14px; }
+.dialog .dialog-small { font-size: 11px; color: #999; }
+[hidden] { display: none !important; }
+@media (max-width: 600px) {
+  .topbar { height: 64px; }
+  .page { min-height: calc(100dvh - 64px); padding-top: 42px; }
+  footer { font-size: 8px; }
+  .game-controls { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: .01ms !important; } }
