@@ -29,7 +29,7 @@
   restart.addEventListener("click", startGame);
 
   function reset() {
-    score = 0; speed = 3.25; groundOffset = 0; spawnTimer = 3.8; over = false;
+    score = 0; speed = 3.25; groundOffset = 0; spawnTimer = 5.0; over = false;
     dino = { x: 82, y: 214, w: 62, h: 56, vy: 0, grounded: true, step: 0 };
     obstacles = [];
     clouds = [{x:360,y:62},{x:690,y:92},{x:820,y:48}];
@@ -54,20 +54,38 @@
     if (e.target === canvas) e.preventDefault();
   }, {passive:false});
 
-  // Pixel-art dinosaur with a fixed running pose (no animated legs).
+  // Original pixel-sprite dinosaur. Each 4px cell is a deliberate pixel;
+  // the legs remain completely still, including during the run.
   function drawDino() {
-    const x=Math.round(dino.x), y=Math.round(dino.y);
+    const px=4, ox=Math.round(dino.x), oy=Math.round(dino.y);
+    const rows=[
+      "             ####",
+      "             ######",
+      "             #######",
+      "              #######",
+      "       ##########",
+      "      ###########",
+      "     ###########",
+      "  ##############",
+      " ############",
+      "  ##########",
+      "     ####",
+      "     ####",
+      "    ##  ##",
+      "    ##  ##",
+      "    ##  ##"
+    ];
     ctx.fillStyle="#171717";
-    ctx.fillRect(x+1,y+25,10,6); ctx.fillRect(x+8,y+20,8,8);
-    ctx.fillRect(x+15,y+15,27,28); ctx.fillRect(x+22,y+11,20,33);
-    ctx.fillRect(x+34,y+7,12,24); ctx.fillRect(x+38,y+1,19,17);
-    ctx.fillRect(x+51,y+7,11,8); ctx.fillRect(x+44,y+17,15,5);
-    ctx.fillRect(x+39,y+27,10,4);
-    ctx.fillRect(x+23,y+41,8,10); ctx.fillRect(x+20,y+49,13,4);
-    ctx.fillRect(x+42,y+41,8,10); ctx.fillRect(x+40,y+49,13,4);
-    ctx.fillStyle="#fff"; ctx.fillRect(x+51,y+5,4,4);
+    rows.forEach((row,ry)=>{
+      for(let cx=0;cx<row.length;cx++){
+        if(row[cx]==="#") ctx.fillRect(ox+cx*px,oy+ry*px,px,px);
+      }
+    });
+    // Eye and a tiny separated muzzle pixel.
+    ctx.fillStyle="#fff";
+    ctx.fillRect(ox+14*px,oy+2*px,px,px);
   }
-  function drawCactus(o) {
+    function drawCactus(o) {
     const x=Math.round(o.x), base=270, h=o.h, top=base-h;
     ctx.fillStyle="#202020";
     // Original simple pixel cactus design, restored.
@@ -127,7 +145,7 @@
 
     spawnTimer -= dt/60;
     if(spawnTimer <= 0) {
-      const canBird = score > 220;
+      const canBird = score > 300;
       const makeBird = canBird && Math.random() < Math.min(.18, .06 + score/4000);
       if(makeBird) {
         const heights = [174,190,205];
@@ -136,7 +154,7 @@
         const h = 28 + Math.random()*Math.min(10, 4+score*.008);
         obstacles.push({type:"cactus",x:930,h,w:42,variant:Math.floor(Math.random()*3)});
       }
-      const gap = 3.8 - difficulty*.55 + Math.random()*.7;
+      const gap = 5.0 - difficulty*1.0 + Math.random()*.8;
       spawnTimer = gap;
     }
 
