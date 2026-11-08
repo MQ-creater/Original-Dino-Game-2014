@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="A free, minimalist dinosaur runner.">
+  <title>Original Dino Game 2014</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="./" aria-label="Original Dino Game 2014 home">DINO<span>2014</span></a>
+    <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="sideMenu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <aside class="menu-panel" id="sideMenu" aria-hidden="true">
+    <div class="menu-heading">MENU</div>
+    <button class="menu-link" id="menuPlay">Play</button>
+    <button class="menu-link" id="menuDonate">Donate</button>
+    <div class="menu-note">Free to play. Always.</div>
+  </aside>
+  <button class="scrim" id="scrim" aria-label="Close menu" tabindex="-1"></button>
+
+  <main class="page">
+    <section class="intro" id="intro">
+      <div class="eyebrow">A SIMPLE LITTLE CHALLENGE</div>
+      <h1>Run, little dino.<br><span>Keep going.</span></h1>
+      <p>Jump over the obstacles. See how far you can go.</p>
+      <button class="primary-button" id="playButton">PLAY <span aria-hidden="true">→</span></button>
+      <div class="hint">Tap the screen or press SPACE to jump</div>
+    </section>
+
+    <section class="game-wrap" id="gameWrap" aria-label="Dinosaur runner game" hidden>
+      <div class="game-meta"><span id="gameStatus">READY</span><span>SCORE <b id="score">00000</b></span></div>
+      <canvas id="game" width="900" height="300" aria-label="A dinosaur running and jumping over obstacles"></canvas>
+      <div class="game-controls">
+        <span id="gameMessage">Tap or press SPACE to jump</span>
+        <button id="restartButton" class="small-button" hidden>PLAY AGAIN</button>
+      </div>
+    </section>
+
+    <footer><span>MADE TO BE PLAYED.</span><span>NO ADS. NO PAYWALLS.</span></footer>
+  </main>
+
+  <dialog id="donateDialog" class="dialog">
+    <button class="dialog-close" id="closeDonate" aria-label="Close">×</button>
+    <div class="eyebrow">SUPPORT THE PROJECT</div>
+    <h2>Keep it free.</h2>
+    <p>Donations may be added in the future. Playing will always be free, and donating will never unlock gameplay features.</p>
+    <p class="dialog-small">Donations are not set up yet.</p>
+  </dialog>
+  <script src="game.js"></script>
+</body>
+</html>
