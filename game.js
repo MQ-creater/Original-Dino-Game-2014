@@ -43,7 +43,7 @@
   }
   function jump() {
     if (!running || over) return;
-    if (dino.grounded) { dino.vy = -12.4; dino.grounded = false; }
+    if (dino.grounded) { dino.vy = -10.6; dino.grounded = false; }
   }
   window.addEventListener("keydown", e => {
     if (["Space","ArrowUp","KeyW"].includes(e.code)) { e.preventDefault(); jump(); }
@@ -88,24 +88,36 @@
     ctx.fillRect(ox+28*cell,oy+4*cell,cell,cell);
   }
 
-  // Pixel-grid saguaro cactus with a thick trunk and two raised arms.
+  // Compact pixel saguaro: restored to a shorter, simpler game-scale obstacle.
   const cactusPixels = [
-    "........##........","........##........","........##........",
-    "........##..####..","........##..####..","........##..####..",
-    "...####.##..####..","...####.##..##....","...##...##..##....",
-    "...##...##..##....","...##...##..##....","...##...##..##....",
-    "...##...##..##....","...######...##....","...######...##....",
-    "........##..##....","........##..##....","........##..##....",
-    "........##..##....","........##..##....","........##..##....",
-    "........##..##....","........##..##....","........##..##....",
-    "........##..##....","........##..##....","........##..##....",
-    "........##..##...."
+    ".......##........",
+    ".......##........",
+    ".......##........",
+    ".......##..###...",
+    "...###.##..###...",
+    "...###.##..##....",
+    "...##..##..##....",
+    "...##..##..##....",
+    "...##..##..##....",
+    "...##..######....",
+    "...######.##.....",
+    ".......##.##.....",
+    ".......##.##.....",
+    ".......##.##.....",
+    ".......##.##.....",
+    ".......##.##.....",
+    ".......##.##.....",
+    ".......##.##.....",
+    ".......##.##.....",
+    ".......##.##....."
   ];
   function drawCactus(o) {
     const cell=3, x=Math.round(o.x), top=270-cactusPixels.length*cell;
     ctx.fillStyle="#202020";
     cactusPixels.forEach((row,ry)=>{
-      for(let cx=0;cx<row.length;cx++) if(row[cx]==="#") ctx.fillRect(x+cx*cell,top+ry*cell,cell,cell);
+      for(let cx=0;cx<row.length;cx++){
+        if(row[cx]==="#") ctx.fillRect(x+cx*cell,top+ry*cell,cell,cell);
+      }
     });
   }
   function drawBird(o) {
@@ -148,7 +160,7 @@
     speed = 4.2 + difficulty*2.4;
     scoreEl.textContent=String(Math.floor(score)).padStart(5,"0");
     groundOffset += speed*dt; dino.step += speed*dt*.18;
-    dino.vy += .62*dt; dino.y += dino.vy*dt;
+    dino.vy += .56*dt; dino.y += dino.vy*dt;
     if(dino.y>=214){dino.y=214;dino.vy=0;dino.grounded=true;}
 
     spawnTimer -= dt/60;
