@@ -29,8 +29,8 @@
   restart.addEventListener("click", startGame);
 
   function reset() {
-    score = 0; speed = 2.7; groundOffset = 0; spawnTimer = 3.0; over = false;
-    dino = { x: 82, y: 211, w: 72, h: 56, vy: 0, grounded: true, step: 0 };
+    score = 0; speed = 3.25; groundOffset = 0; spawnTimer = 3.8; over = false;
+    dino = { x: 82, y: 214, w: 62, h: 56, vy: 0, grounded: true, step: 0 };
     obstacles = [];
     clouds = [{x:360,y:62},{x:690,y:92},{x:820,y:48}];
     scoreEl.textContent = "00000"; statusEl.textContent = "RUNNING";
@@ -54,92 +54,43 @@
     if (e.target === canvas) e.preventDefault();
   }, {passive:false});
 
-  // Original side-profile dinosaur with a smooth silhouette and animated feet.
+  // Pixel-art dinosaur with a fixed running pose (no animated legs).
   function drawDino() {
-    const x = dino.x, y = dino.y;
-    const ink = "#171717";
-    ctx.fillStyle = ink;
-    // Long tapered tail.
-    ctx.beginPath();
-    ctx.moveTo(x+7,y+34); ctx.lineTo(x-1,y+29); ctx.lineTo(x+5,y+39);
-    ctx.lineTo(x+24,y+42); ctx.lineTo(x+28,y+35); ctx.closePath(); ctx.fill();
-    // Rounded torso and chest.
-    ctx.beginPath();
-    ctx.ellipse(x+34,y+34,22,15,-.08,0,Math.PI*2); ctx.fill();
-    // Upright neck flowing into a broad head and short muzzle.
-    ctx.beginPath();
-    ctx.moveTo(x+42,y+35); ctx.quadraticCurveTo(x+44,y+24,x+47,y+17);
-    ctx.lineTo(x+47,y+8); ctx.quadraticCurveTo(x+48,y+1,x+57,y+2);
-    ctx.lineTo(x+67,y+6); ctx.quadraticCurveTo(x+72,y+9,x+70,y+14);
-    ctx.lineTo(x+64,y+17); ctx.lineTo(x+55,y+17);
-    ctx.quadraticCurveTo(x+53,y+28,x+55,y+39); ctx.closePath(); ctx.fill();
-    // Tiny arm and a small curved mouth notch.
-    ctx.strokeStyle=ink; ctx.lineWidth=4; ctx.lineCap="round";
-    ctx.beginPath(); ctx.moveTo(x+49,y+27); ctx.lineTo(x+57,y+31); ctx.stroke();
-    ctx.strokeStyle="#fff"; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(x+64,y+14); ctx.lineTo(x+69,y+13); ctx.stroke();
-    // Eye.
-    ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(x+61,y+7,2.2,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle=ink; ctx.beginPath(); ctx.arc(x+62,y+7,1,0,Math.PI*2); ctx.fill();
-    // Two separate legs with a clear running cycle.
-    const stride=dino.grounded ? Math.floor(dino.step)%2 : 0;
-    ctx.strokeStyle=ink; ctx.lineWidth=6; ctx.lineCap="square";
-    ctx.beginPath();
-    if(stride===0){
-      ctx.moveTo(x+28,y+43); ctx.lineTo(x+25,y+51); ctx.lineTo(x+18,y+53);
-      ctx.moveTo(x+43,y+43); ctx.lineTo(x+46,y+50); ctx.lineTo(x+54,y+50);
-    } else {
-      ctx.moveTo(x+28,y+43); ctx.lineTo(x+30,y+50); ctx.lineTo(x+38,y+51);
-      ctx.moveTo(x+43,y+43); ctx.lineTo(x+40,y+51); ctx.lineTo(x+33,y+53);
-    }
-    ctx.stroke();
+    const x=Math.round(dino.x), y=Math.round(dino.y);
+    ctx.fillStyle="#171717";
+    ctx.fillRect(x+1,y+25,10,6); ctx.fillRect(x+8,y+20,8,8);
+    ctx.fillRect(x+15,y+15,27,28); ctx.fillRect(x+22,y+11,20,33);
+    ctx.fillRect(x+34,y+7,12,24); ctx.fillRect(x+38,y+1,19,17);
+    ctx.fillRect(x+51,y+7,11,8); ctx.fillRect(x+44,y+17,15,5);
+    ctx.fillRect(x+39,y+27,10,4);
+    ctx.fillRect(x+23,y+41,8,10); ctx.fillRect(x+20,y+49,13,4);
+    ctx.fillRect(x+42,y+41,8,10); ctx.fillRect(x+40,y+49,13,4);
+    ctx.fillStyle="#fff"; ctx.fillRect(x+51,y+5,4,4);
   }
   function drawCactus(o) {
-    const x = Math.round(o.x), base = 270, h = o.h, top = base-h;
-    ctx.fillStyle = "#202020";
-    // Each plant has a different silhouette and a small pebble at its foot.
-    if (o.variant === 0) {
-      ctx.fillRect(x+12,top+3,14,h-3);
-      ctx.fillRect(x+5,top+Math.floor(h*.48),9,7);
-      ctx.fillRect(x+5,top+Math.floor(h*.31),6,19);
-      ctx.fillRect(x+25,top+Math.floor(h*.62),10,7);
-      ctx.fillRect(x+29,top+Math.floor(h*.42),6,22);
-      ctx.fillRect(x+15,top,8,7);
-      ctx.fillStyle="#f4f4f4"; ctx.fillRect(x+18,top+12,2,h-20);
-    } else if (o.variant === 1) {
-      ctx.fillRect(x+4,base-18,15,18); ctx.fillRect(x+9,top+5,7,h-20);
-      ctx.fillRect(x+19,base-29,17,29); ctx.fillRect(x+24,top,8,h-25);
-      ctx.fillStyle="#f4f4f4"; ctx.fillRect(x+12,top+13,2,h-34); ctx.fillRect(x+28,top+9,2,h-35);
-    } else {
-      ctx.beginPath(); ctx.moveTo(x+2,base); ctx.lineTo(x+8,top+10);
-      ctx.lineTo(x+18,top); ctx.lineTo(x+30,top+12); ctx.lineTo(x+38,base); ctx.closePath(); ctx.fill();
-      ctx.fillStyle="#f4f4f4"; ctx.fillRect(x+18,top+15,3,h-25);
-    }
-    ctx.fillStyle="#202020"; ctx.fillRect(x+3,base-2,37,2);
+    const x=Math.round(o.x), base=270, h=o.h, top=base-h;
+    ctx.fillStyle="#202020";
+    // Original simple pixel cactus design, restored.
+    ctx.fillRect(x+11,top+5,13,h-5); ctx.fillRect(x+14,top,7,8);
+    ctx.fillRect(x+2,top+Math.floor(h*.48),10,7);
+    ctx.fillRect(x+2,top+Math.floor(h*.32),6,18);
+    ctx.fillRect(x+23,top+Math.floor(h*.62),11,7);
+    ctx.fillRect(x+28,top+Math.floor(h*.43),6,22);
+    ctx.fillStyle="#f4f4f4";
+    ctx.fillRect(x+17,top+10,2,Math.max(8,h-22));
+    ctx.fillRect(x+5,top+Math.floor(h*.36),2,8);
+    ctx.fillRect(x+30,top+Math.floor(h*.49),2,9);
+    ctx.fillStyle="#202020"; ctx.fillRect(x+8,base-2,23,2);
   }
-
   function drawBird(o) {
-    const x = Math.round(o.x), y = Math.round(o.y);
-    const flap = Math.sin(o.phase) > 0;
-    ctx.fillStyle = "#202020";
-    // Rounded body and head, with a pointed beak and split tail.
-    ctx.beginPath(); ctx.ellipse(x+23,y+14,15,7,0,0,Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(x+37,y+9,7,0,Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(x+43,y+8); ctx.lineTo(x+52,y+11); ctx.lineTo(x+43,y+13); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(x+9,y+13); ctx.lineTo(x,y+8); ctx.lineTo(x+4,y+17); ctx.fill();
-    // Broad feathered wing changes pose smoothly on each flap.
-    ctx.beginPath();
-    if (flap) {
-      ctx.moveTo(x+16,y+13); ctx.quadraticCurveTo(x+18,y-8,x+34,y-9);
-      ctx.quadraticCurveTo(x+30,y+2,x+25,y+14);
-    } else {
-      ctx.moveTo(x+15,y+14); ctx.quadraticCurveTo(x+18,y+30,x+35,y+27);
-      ctx.quadraticCurveTo(x+29,y+19,x+25,y+13);
-    }
-    ctx.closePath(); ctx.fill();
-    ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(x+39,y+7,1.8,0,Math.PI*2); ctx.fill();
+    const x=Math.round(o.x), y=Math.round(o.y), flap=Math.floor(o.phase)%2===0;
+    ctx.fillStyle="#202020";
+    ctx.fillRect(x+12,y+9,23,11); ctx.fillRect(x+29,y+4,11,11);
+    ctx.fillRect(x+38,y+9,8,4); ctx.fillRect(x+4,y+11,10,5);
+    if(flap){ctx.fillRect(x+15,y+1,8,9);ctx.fillRect(x+21,y+4,9,6);}
+    else {ctx.fillRect(x+16,y+15,9,8);ctx.fillRect(x+22,y+14,10,5);}
+    ctx.fillStyle="#fff"; ctx.fillRect(x+35,y+7,3,3);
   }
-
   function draw() {
     ctx.clearRect(0,0,900,300);
     ctx.fillStyle="#e8e8e8";
@@ -167,25 +118,25 @@
     const dt=Math.min((now-last)/16.67,2); last=now;
     score += dt*0.11;
     // Starts forgiving, then gradually increases speed and obstacle frequency.
-    const difficulty = Math.min(1, score/1200);
-    speed = 2.7 + difficulty*1.5;
+    const difficulty = Math.min(1, score/1500);
+    speed = 3.25 + difficulty*2.0;
     scoreEl.textContent=String(Math.floor(score)).padStart(5,"0");
     groundOffset += speed*dt; dino.step += speed*dt*.18;
     dino.vy += .62*dt; dino.y += dino.vy*dt;
-    if(dino.y>=211){dino.y=211;dino.vy=0;dino.grounded=true;}
+    if(dino.y>=214){dino.y=214;dino.vy=0;dino.grounded=true;}
 
     spawnTimer -= dt/60;
     if(spawnTimer <= 0) {
-      const canBird = score > 160;
-      const makeBird = canBird && Math.random() < Math.min(.22, .08 + score/3000);
+      const canBird = score > 220;
+      const makeBird = canBird && Math.random() < Math.min(.18, .06 + score/4000);
       if(makeBird) {
         const heights = [174,190,205];
         obstacles.push({type:"bird",x:930,y:heights[Math.floor(Math.random()*heights.length)],w:52,h:32,phase:0});
       } else {
-        const h = 26 + Math.random()*Math.min(12, 3+score*.012);
+        const h = 28 + Math.random()*Math.min(10, 4+score*.008);
         obstacles.push({type:"cactus",x:930,h,w:42,variant:Math.floor(Math.random()*3)});
       }
-      const gap = 3.35 - difficulty*.35 + Math.random()*.65;
+      const gap = 3.8 - difficulty*.55 + Math.random()*.7;
       spawnTimer = gap;
     }
 
@@ -193,7 +144,7 @@
     obstacles=obstacles.filter(o=>o.x>-75);
     clouds.forEach(c=>{c.x-=speed*.22*dt;if(c.x<-60)c.x=930;});
 
-    const playerBox={x:dino.x+10,y:dino.y+8,w:43,h:43};
+    const playerBox={x:dino.x+9,y:dino.y+7,w:42,h:42};
     for(const o of obstacles) {
       const box = o.type==="bird"
         ? {x:o.x+5,y:o.y+4,w:43,h:24}
