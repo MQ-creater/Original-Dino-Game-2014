@@ -6,7 +6,7 @@
   const scoreEl = $("score"), statusEl = $("gameStatus"), messageEl = $("gameMessage");
   const restart = $("restartButton");
 
-  let running = false, over = false, raf = 0, last = 0, score = 0, speed = 4.1;
+  let running = false, over = false, raf = 0, last = 0, score = 0, speed = 3.25;
   let dino, obstacles, clouds, groundOffset, spawnTimer = 0;
 
   function openMenu(show) {
@@ -19,39 +19,31 @@
   scrim.addEventListener("click", () => openMenu(false));
   $("menuPlay").addEventListener("click", () => { openMenu(false); startGame(); });
   $("menuDonate").addEventListener("click", () => {
-    openMenu(false);
-    cancelAnimationFrame(raf);
-    running = false;
-    intro.hidden = true;
-    wrap.hidden = true;
-    donatePage.hidden = false;
+    openMenu(false); cancelAnimationFrame(raf); running = false;
+    intro.hidden = true; wrap.hidden = true; donatePage.hidden = false;
   });
   $("backFromDonate").addEventListener("click", () => {
-    donatePage.hidden = true;
-    intro.hidden = false;
+    donatePage.hidden = true; intro.hidden = false;
   });
   $("playButton").addEventListener("click", startGame);
   restart.addEventListener("click", startGame);
 
   function reset() {
-    score = 0; speed = 4.1; groundOffset = 0; spawnTimer = 1.25; over = false;
-    dino = { x: 88, y: 222, w: 48, h: 48, vy: 0, grounded: true, step: 0 };
+    score = 0; speed = 3.25; groundOffset = 0; spawnTimer = 2.15; over = false;
+    dino = { x: 82, y: 214, w: 62, h: 56, vy: 0, grounded: true, step: 0 };
     obstacles = [];
     clouds = [{x:360,y:62},{x:690,y:92},{x:820,y:48}];
-    scoreEl.textContent = "00000";
-    statusEl.textContent = "RUNNING";
-    messageEl.textContent = "Tap or press SPACE to jump";
-    restart.hidden = true;
+    scoreEl.textContent = "00000"; statusEl.textContent = "RUNNING";
+    messageEl.textContent = "Tap or press SPACE to jump"; restart.hidden = true;
   }
   function startGame() {
-    cancelAnimationFrame(raf);
-    intro.hidden = true; donatePage.hidden = true; wrap.hidden = false;
-    reset(); running = true; last = performance.now();
+    cancelAnimationFrame(raf); intro.hidden = true; donatePage.hidden = true;
+    wrap.hidden = false; reset(); running = true; last = performance.now();
     raf = requestAnimationFrame(loop);
   }
   function jump() {
     if (!running || over) return;
-    if (dino.grounded) { dino.vy = -12.8; dino.grounded = false; }
+    if (dino.grounded) { dino.vy = -12.4; dino.grounded = false; }
   }
   window.addEventListener("keydown", e => {
     if (["Space","ArrowUp","KeyW"].includes(e.code)) { e.preventDefault(); jump(); }
@@ -62,76 +54,90 @@
     if (e.target === canvas) e.preventDefault();
   }, {passive:false});
 
-  // Original pixel-art runner: a friendly, long-tailed dinosaur silhouette.
+  // Original monochrome pixel creature: long counterbalanced tail, sturdy torso,
+  // upright neck, broad snout, tiny forearms and alternating two-step legs.
   function drawDino() {
     const x = Math.round(dino.x), y = Math.round(dino.y);
     const ink = "#171717";
     ctx.fillStyle = ink;
-    // Tail, back, body and raised head.
-    ctx.fillRect(x+1,y+24,10,7);
-    ctx.fillRect(x+7,y+19,8,8);
-    ctx.fillRect(x+13,y+12,25,27);
-    ctx.fillRect(x+25,y+5,18,18);
-    ctx.fillRect(x+36,y+11,12,11);
-    // Small arms and lower jaw.
-    ctx.fillRect(x+29,y+25,10,5);
-    ctx.fillRect(x+38,y+22,9,5);
-    // Pixel eye and nostril.
+    // Tail taper and back silhouette.
+    ctx.fillRect(x+0,y+27,8,5);
+    ctx.fillRect(x+7,y+23,8,7);
+    ctx.fillRect(x+13,y+19,10,11);
+    // Main body and chest.
+    ctx.fillRect(x+19,y+17,29,27);
+    ctx.fillRect(x+25,y+12,23,33);
+    // Neck and head profile.
+    ctx.fillRect(x+35,y+5,13,23);
+    ctx.fillRect(x+39,y+1,19,17);
+    ctx.fillRect(x+49,y+8,12,9);
+    // Jaw and small forearms.
+    ctx.fillRect(x+44,y+18,15,5);
+    ctx.fillRect(x+38,y+27,9,4);
+    ctx.fillRect(x+45,y+29,7,3);
+    // Eye and nostril highlights.
     ctx.fillStyle = "#fff";
-    ctx.fillRect(x+37,y+9,4,4);
+    ctx.fillRect(x+51,y+5,4,4);
+    ctx.fillRect(x+60,y+11,2,2);
+    // Tiny back ridge gives the silhouette its own character.
     ctx.fillStyle = ink;
-    ctx.fillRect(x+39,y+10,2,2);
-    ctx.fillRect(x+45,y+17,2,2);
-    // Two animated legs.
+    ctx.fillRect(x+22,y+14,5,4);
+    ctx.fillRect(x+29,y+12,5,4);
+    // Two legs animate independently while running.
     const stride = dino.grounded ? Math.floor(dino.step)%2 : 0;
-    ctx.fillStyle = ink;
     if (stride === 0) {
-      ctx.fillRect(x+17,y+36,7,9); ctx.fillRect(x+13,y+43,12,4);
-      ctx.fillRect(x+31,y+36,7,7); ctx.fillRect(x+34,y+42,10,4);
+      ctx.fillRect(x+25,y+40,9,10); ctx.fillRect(x+21,y+48,15,4);
+      ctx.fillRect(x+42,y+40,9,7); ctx.fillRect(x+45,y+46,13,4);
     } else {
-      ctx.fillRect(x+17,y+36,7,7); ctx.fillRect(x+14,y+42,10,4);
-      ctx.fillRect(x+31,y+36,7,9); ctx.fillRect(x+29,y+43,12,4);
+      ctx.fillRect(x+25,y+40,9,7); ctx.fillRect(x+22,y+46,13,4);
+      ctx.fillRect(x+42,y+40,9,10); ctx.fillRect(x+39,y+48,15,4);
     }
   }
 
   function drawCactus(o) {
-    const x = Math.round(o.x), base = 270, h = o.h;
-    const top = base-h;
+    const x = Math.round(o.x), base = 270, h = o.h, top = base-h;
     ctx.fillStyle = "#202020";
-    // Main stem with stepped shoulders.
-    ctx.fillRect(x+11,top+5,13,h-5);
-    ctx.fillRect(x+14,top,7,8);
-    // Arms vary slightly by cactus size.
-    ctx.fillRect(x+2,top+Math.floor(h*.48),10,7);
-    ctx.fillRect(x+2,top+Math.floor(h*.32),6,18);
-    ctx.fillRect(x+23,top+Math.floor(h*.62),11,7);
-    ctx.fillRect(x+28,top+Math.floor(h*.43),6,22);
-    // Light cut-outs give the monochrome cactus a crisp, dimensional look.
-    ctx.fillStyle = "#f4f4f4";
-    ctx.fillRect(x+17,top+10,2,Math.max(8,h-22));
-    ctx.fillRect(x+5,top+Math.floor(h*.36),2,8);
-    ctx.fillRect(x+30,top+Math.floor(h*.49),2,9);
-    ctx.fillStyle = "#202020";
-    ctx.fillRect(x+8,base-2,23,2);
+    // Each plant has a different silhouette and a small pebble at its foot.
+    if (o.variant === 0) {
+      ctx.fillRect(x+12,top+3,14,h-3);
+      ctx.fillRect(x+5,top+Math.floor(h*.48),9,7);
+      ctx.fillRect(x+5,top+Math.floor(h*.31),6,19);
+      ctx.fillRect(x+25,top+Math.floor(h*.62),10,7);
+      ctx.fillRect(x+29,top+Math.floor(h*.42),6,22);
+      ctx.fillRect(x+15,top,8,7);
+      ctx.fillStyle="#f4f4f4"; ctx.fillRect(x+18,top+12,2,h-20);
+    } else if (o.variant === 1) {
+      ctx.fillRect(x+4,base-18,15,18); ctx.fillRect(x+9,top+5,7,h-20);
+      ctx.fillRect(x+19,base-29,17,29); ctx.fillRect(x+24,top,8,h-25);
+      ctx.fillStyle="#f4f4f4"; ctx.fillRect(x+12,top+13,2,h-34); ctx.fillRect(x+28,top+9,2,h-35);
+    } else {
+      ctx.beginPath(); ctx.moveTo(x+2,base); ctx.lineTo(x+8,top+10);
+      ctx.lineTo(x+18,top); ctx.lineTo(x+30,top+12); ctx.lineTo(x+38,base); ctx.closePath(); ctx.fill();
+      ctx.fillStyle="#f4f4f4"; ctx.fillRect(x+18,top+15,3,h-25);
+    }
+    ctx.fillStyle="#202020"; ctx.fillRect(x+3,base-2,37,2);
   }
 
   function drawBird(o) {
     const x = Math.round(o.x), y = Math.round(o.y);
-    const flap = Math.floor(o.phase)%2 === 0;
+    const flap = Math.sin(o.phase) > 0;
     ctx.fillStyle = "#202020";
-    // Body, head, beak and tail.
-    ctx.fillRect(x+12,y+9,23,11);
-    ctx.fillRect(x+29,y+4,11,11);
-    ctx.fillRect(x+38,y+9,8,4);
-    ctx.fillRect(x+4,y+11,10,5);
-    // Wings flap between two simple pixel-art poses.
+    // Rounded body and head, with a pointed beak and split tail.
+    ctx.beginPath(); ctx.ellipse(x+23,y+14,15,7,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x+37,y+9,7,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x+43,y+8); ctx.lineTo(x+52,y+11); ctx.lineTo(x+43,y+13); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x+9,y+13); ctx.lineTo(x,y+8); ctx.lineTo(x+4,y+17); ctx.fill();
+    // Broad feathered wing changes pose smoothly on each flap.
+    ctx.beginPath();
     if (flap) {
-      ctx.fillRect(x+15,y+1,8,9); ctx.fillRect(x+21,y+4,9,6);
+      ctx.moveTo(x+16,y+13); ctx.quadraticCurveTo(x+18,y-8,x+34,y-9);
+      ctx.quadraticCurveTo(x+30,y+2,x+25,y+14);
     } else {
-      ctx.fillRect(x+16,y+15,9,8); ctx.fillRect(x+22,y+14,10,5);
+      ctx.moveTo(x+15,y+14); ctx.quadraticCurveTo(x+18,y+30,x+35,y+27);
+      ctx.quadraticCurveTo(x+29,y+19,x+25,y+13);
     }
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(x+35,y+7,3,3);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle="#fff"; ctx.beginPath(); ctx.arc(x+39,y+7,1.8,0,Math.PI*2); ctx.fill();
   }
 
   function draw() {
@@ -146,10 +152,8 @@
 
   function endGame() {
     running=false; over=true; statusEl.textContent="FINISHED";
-    messageEl.textContent="Nice run. Want another try?";
-    restart.hidden=false;
-    cancelAnimationFrame(raf);
-    draw();
+    messageEl.textContent="Nice run. Want another try?"; restart.hidden=false;
+    cancelAnimationFrame(raf); draw();
     ctx.fillStyle="rgba(255,255,255,.88)"; ctx.fillRect(0,0,900,300);
     ctx.fillStyle="#111"; ctx.textAlign="center";
     ctx.font="800 34px -apple-system, BlinkMacSystemFont, sans-serif";
@@ -162,46 +166,44 @@
     if(!running) return;
     const dt=Math.min((now-last)/16.67,2); last=now;
     score += dt*0.11;
-    // A gentle opening, followed by a steady increase in pace.
-    speed = Math.min(9.8, 4.1 + score*0.012);
+    // Starts forgiving, then gradually increases speed and obstacle frequency.
+    const difficulty = Math.min(1, score/520);
+    speed = 3.25 + difficulty*5.15;
     scoreEl.textContent=String(Math.floor(score)).padStart(5,"0");
-    groundOffset += speed*dt;
-    dino.step += speed*dt*.18;
+    groundOffset += speed*dt; dino.step += speed*dt*.18;
     dino.vy += .62*dt; dino.y += dino.vy*dt;
-    if(dino.y>=222){dino.y=222;dino.vy=0;dino.grounded=true;}
+    if(dino.y>=214){dino.y=214;dino.vy=0;dino.grounded=true;}
 
     spawnTimer -= dt/60;
     if(spawnTimer <= 0) {
-      const canBird = score > 90;
-      const makeBird = canBird && Math.random() < Math.min(.34, .12 + score/900);
+      const canBird = score > 65;
+      const makeBird = canBird && Math.random() < Math.min(.38, .12 + score/1100);
       if(makeBird) {
-        obstacles.push({type:"bird",x:930,y:score>220 && Math.random()<.5?190:207,w:46,h:24,phase:0});
+        const heights = [174,190,205];
+        obstacles.push({type:"bird",x:930,y:heights[Math.floor(Math.random()*heights.length)],w:52,h:32,phase:0});
       } else {
-        const h = 34 + Math.random()*Math.min(22, 8+score*.035);
-        obstacles.push({type:"cactus",x:930,h,w:36});
+        const h = 30 + Math.random()*Math.min(30, 5+score*.045);
+        obstacles.push({type:"cactus",x:930,h,w:42,variant:Math.floor(Math.random()*3)});
       }
-      const difficulty = Math.min(1, score/450);
-      const gap = 1.95 - difficulty*.48 + Math.random()*.55;
-      spawnTimer = Math.max(.92,gap) * (4.1/speed);
+      const gap = 2.75 - difficulty*1.05 + Math.random()*.65;
+      spawnTimer = Math.max(1.05,gap) * (3.25/speed);
     }
 
-    obstacles.forEach(o=>{o.x-=speed*dt; if(o.type==="bird") o.phase+=dt*.22;});
-    obstacles=obstacles.filter(o=>o.x>-70);
+    obstacles.forEach(o=>{o.x-=speed*dt; if(o.type==="bird") o.phase+=dt*.18;});
+    obstacles=obstacles.filter(o=>o.x>-75);
     clouds.forEach(c=>{c.x-=speed*.22*dt;if(c.x<-60)c.x=930;});
 
-    const playerBox={x:dino.x+9,y:dino.y+7,w:34,h:38};
+    const playerBox={x:dino.x+10,y:dino.y+8,w:43,h:43};
     for(const o of obstacles) {
       const box = o.type==="bird"
-        ? {x:o.x+7,y:o.y+5,w:35,h:17}
-        : {x:o.x+3,y:270-o.h+3,w:30,h:o.h-3};
-      if(playerBox.x < box.x+box.w-5 && playerBox.x+playerBox.w-5 > box.x &&
+        ? {x:o.x+5,y:o.y+4,w:43,h:24}
+        : {x:o.x+3,y:270-o.h+3,w:35,h:o.h-3};
+      if(playerBox.x < box.x+box.w-6 && playerBox.x+playerBox.w-6 > box.x &&
          playerBox.y < box.y+box.h && playerBox.y+playerBox.h > box.y+3) {
         endGame(); return;
       }
     }
     draw(); raf=requestAnimationFrame(loop);
   }
-  reset();
-  running = false;
-  draw();
+  reset(); running = false; draw();
 })();
